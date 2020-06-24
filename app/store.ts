@@ -19,11 +19,11 @@ let store: store = {
       phone: '09009090',
       asignedRoom: [101],
       checkInDate: '2020/06/16',
-      checkOutDate: '',
+      checkOutDate: '2020/06/26',
       invoice: true,
     },
     {
-      idGuest: '6378',
+      idGuest: '99378',
       members: [
         {
           idCard: '32345678',
@@ -49,7 +49,7 @@ let store: store = {
       phone: '09009190',
       asignedRoom: [204, 304],
       checkInDate: '2020/06/17',
-      checkOutDate: '',
+      checkOutDate: '2020/06/19',
       invoice: false,
     },
   ],

@@ -1,7 +1,7 @@
 const printListRooms = listToPrint => {
   const listRoomsTable = document.querySelector('#listRoomsTable');
-
   if (listRoomsTable) {
+    listRoomsTable.innerHTML = '';
     listToPrint.forEach((value, index) => {
       listRoomsTable.insertAdjacentHTML(
         'beforeend',

@@ -156,10 +156,10 @@ var store = {
     phone: '09009090',
     asignedRoom: [101],
     checkInDate: '2020/06/16',
-    checkOutDate: '',
+    checkOutDate: '2020/06/26',
     invoice: true
   }, {
-    idGuest: '6378',
+    idGuest: '99378',
     members: [{
       idCard: '32345678',
       name: 'Axel',
@@ -180,7 +180,7 @@ var store = {
     phone: '09009190',
     asignedRoom: [204, 304],
     checkInDate: '2020/06/17',
-    checkOutDate: '',
+    checkOutDate: '2020/06/19',
     invoice: false
   }],
   rooms: [{
@@ -287,6 +287,7 @@ var printListRooms = function printListRooms(listToPrint) {
   var listRoomsTable = document.querySelector('#listRoomsTable');
 
   if (listRoomsTable) {
+    listRoomsTable.innerHTML = '';
     listToPrint.forEach(function (value, index) {
       listRoomsTable.insertAdjacentHTML('beforeend', "<tr class=\"table-success\">\n          <th scope=\"row\" class=\"py-1\">" + (index + 1) + "</th>\n      <th scope=\"col\" class=\"py-1\">" + value.idRoom + "</th>\n      <th scope=\"col\" class=\"py-1\">" + value.maxCapacity + "</th>\n      <th scope=\"col\" class=\"py-1\">" + value.price + "</th>\n    </tr>");
     });
@@ -338,21 +339,21 @@ Object.keys(_listRoom).forEach(function (key) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.onclickCallback = exports.addInputForMember = void 0;
+exports.onclickCallbackAddMemberButton = exports.addInputForMember = void 0;
 
 var addInputForMember = function addInputForMember() {
   var addMemberButton = document.querySelector('#addMemberButton');
-  addMemberButton === null || addMemberButton === void 0 ? void 0 : addMemberButton.addEventListener('click', onclickCallback, false);
+  addMemberButton === null || addMemberButton === void 0 ? void 0 : addMemberButton.addEventListener('click', onclickCallbackAddMemberButton, false);
 };
 
 exports.addInputForMember = addInputForMember;
 
-var onclickCallback = function onclickCallback() {
+var onclickCallbackAddMemberButton = function onclickCallbackAddMemberButton() {
   var addInputMember = document.querySelector('.addPerson');
   addInputMember.insertAdjacentHTML('afterend', " <div class=\"form-row addPerson\">\n<div class=\"form-group col-md-4\">\n<label for=\"name\" class=\"bg-white rounded px-2\">Name</label>\n<input type=\"text\" class=\"form-control namePerson\" />\n</div>\n<div class=\"form-group col-md-4\">\n<label for=\"idCard\" class=\"bg-white rounded px-2\">idCard</label>\n<input type=\"text\" class=\"form-control idCardPerson\" />\n</div>\n<div class=\"form-group col-md-4\">\n<label for=\"age\" class=\"bg-white rounded px-2\">Age</label>\n<input\n  type=\"number\"\n  class=\"form-control agePerson\"\n  min=\"0\"\n  max=\"99\"\n/>\n</div>\n</div>    ");
 };
 
-exports.onclickCallback = onclickCallback;
+exports.onclickCallbackAddMemberButton = onclickCallbackAddMemberButton;
 },{}],"app/pages/checkIn/reset-member-area.ts":[function(require,module,exports) {
 "use strict";
 
@@ -382,13 +383,24 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.Person = Person;
+exports.Guest = Guest;
 
 function Person(idCard, name, age) {
   this.idCard = idCard;
   this.name = name;
   this.age = age;
 }
-},{}],"app/pages/checkIn/get-New-Member.ts":[function(require,module,exports) {
+
+function Guest(idGuest, members, phone, asignedRoom, checkInDate, checkOutDate, invoice) {
+  this.idGuest = idGuest;
+  this.members = members;
+  this.phone = phone;
+  this.asignedRoom = asignedRoom;
+  this.checkInDate = checkInDate;
+  this.checkOutDate = checkOutDate;
+  this.invoice = invoice;
+}
+},{}],"app/pages/checkIn/components/get-new-member.ts":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -396,7 +408,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.getNewMember = void 0;
 
-var _constructorFunctions = require("../../components/constructor-functions");
+var _constructorFunctions = require("../../../components/constructor-functions");
 
 var getNewMember = function getNewMember() {
   var result = {
@@ -409,21 +421,246 @@ var getNewMember = function getNewMember() {
     var newIdCard = value.children[0].children[1].value;
     var newName = value.children[1].children[1].value;
     var newAge = value.children[2].children[1].value;
+    newAge = +newAge;
 
-    if (newIdCard === '' || newName === '' || newAge === '') {
-      result.reject.push("Please complete member " + (index + 1));
+    if (newIdCard === '' || newName === '' || newAge === 0) {
+      result.reject.push("Faltan datos de la linea " + (index + 1));
       return result;
     }
 
     var newPerson = new _constructorFunctions.Person(newIdCard, newName, newAge);
     newMembers.push(newPerson);
   });
-  result.resolve.push(newMembers);
+
+  if (newMembers.length !== 0) {
+    result.resolve.push(newMembers);
+  }
+
   return result;
 };
 
 exports.getNewMember = getNewMember;
-},{"../../components/constructor-functions":"app/components/constructor-functions.ts"}],"app/pages/checkIn/register-guest-in-store.ts":[function(require,module,exports) {
+},{"../../../components/constructor-functions":"app/components/constructor-functions.ts"}],"app/pages/checkIn/components/get-phone-dates-checkIn.ts":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.getPhoneDatesCheckIn = void 0;
+
+var getPhoneDatesCheckIn = function getPhoneDatesCheckIn() {
+  var result = {
+    resolve: [],
+    reject: []
+  };
+  var newPhone = document.querySelector('#phone').value;
+
+  if (newPhone === '') {
+    result.reject.push('movil incorrecto');
+  }
+
+  var newCheckInDate = document.querySelector('#checkInDate').value;
+
+  if (newCheckInDate === '') {
+    result.reject.push('Fecha Check In incorrecto');
+  }
+
+  var newCheckOutDate = document.querySelector('#checkOutDate').value;
+
+  if (newCheckOutDate === '') {
+    result.reject.push('Fecha Check Out incorrecto');
+  }
+
+  result.resolve.push(newPhone, newCheckInDate, newCheckOutDate);
+  return result;
+};
+
+exports.getPhoneDatesCheckIn = getPhoneDatesCheckIn;
+},{}],"app/pages/checkIn/components/get-capacity-per-room.ts":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.getCapacityPerRoom = void 0;
+
+var getCapacityPerRoom = function getCapacityPerRoom(qtyRooms, capaRequested) {
+  var roomsToFind = [];
+
+  for (var i = 0; i < qtyRooms - 1; i++) {
+    roomsToFind.push(Math.round(capaRequested / (qtyRooms - i)));
+    capaRequested = capaRequested - Math.round(capaRequested / (qtyRooms - i));
+  }
+
+  roomsToFind.push(capaRequested);
+  return roomsToFind;
+};
+
+exports.getCapacityPerRoom = getCapacityPerRoom;
+},{}],"app/components/get-assigned-room.ts":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.getFirstEmptyRoom = void 0;
+
+var _store = require("../store");
+
+var _getEmptyRooms = require("./get-empty-rooms");
+
+var getFirstEmptyRoom = function getFirstEmptyRoom(capacity) {
+  var emptyRooms;
+  emptyRooms = (0, _getEmptyRooms.getEmptyRooms)(_store.store);
+  var result = emptyRooms.find(function (value) {
+    if (value.maxCapacity === capacity) return value;
+  });
+  return result;
+};
+
+exports.getFirstEmptyRoom = getFirstEmptyRoom;
+},{"../store":"app/store.ts","./get-empty-rooms":"app/components/get-empty-rooms.ts"}],"app/components/actual-max-capacity-free.ts":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.actualMaxCapaFree = void 0;
+
+var _getEmptyRooms = require("./get-empty-rooms");
+
+var _store = require("../store");
+
+var actualMaxCapaFree = function actualMaxCapaFree() {
+  var result = [];
+  var emptyRooms = (0, _getEmptyRooms.getEmptyRooms)(_store.store);
+  emptyRooms.forEach(function (value) {
+    return result.push(value.maxCapacity);
+  });
+  return Math.max.apply(Math, result);
+};
+
+exports.actualMaxCapaFree = actualMaxCapaFree;
+},{"./get-empty-rooms":"app/components/get-empty-rooms.ts","../store":"app/store.ts"}],"app/components/bucle-find-empty-room.ts":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.getRoomSelected = void 0;
+
+var _getAssignedRoom = require("./get-assigned-room");
+
+var _actualMaxCapacityFree = require("./actual-max-capacity-free");
+
+var getRoomSelected = function getRoomSelected(requestedCapacity) {
+  var findEmptyRoom;
+
+  for (var i = requestedCapacity; i <= (0, _actualMaxCapacityFree.actualMaxCapaFree)(); i++) {
+    findEmptyRoom = (0, _getAssignedRoom.getFirstEmptyRoom)(i);
+
+    if (findEmptyRoom !== undefined) {
+      i = (0, _actualMaxCapacityFree.actualMaxCapaFree)();
+    }
+  }
+
+  return findEmptyRoom;
+};
+
+exports.getRoomSelected = getRoomSelected;
+},{"./get-assigned-room":"app/components/get-assigned-room.ts","./actual-max-capacity-free":"app/components/actual-max-capacity-free.ts"}],"app/pages/checkIn/components/get-new-assigned-rooms.ts":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.getNewAssignedRooms = void 0;
+
+var _store = require("../../../store");
+
+var _getCapacityPerRoom = require("./get-capacity-per-room");
+
+var _bucleFindEmptyRoom = require("../../../components/bucle-find-empty-room");
+
+var getNewAssignedRooms = function getNewAssignedRooms(newMembers, guestId) {
+  var result = {
+    resolve: [],
+    reject: []
+  };
+
+  if (!newMembers.length) {
+    result.reject.push('No hay personas para registrar');
+    return result;
+  }
+
+  var capaRequested;
+
+  if (newMembers.length) {
+    capaRequested = newMembers[0].length;
+  }
+
+  var quantityRoomsRequested = document.querySelector('#selectNumberRooms');
+  quantityRoomsRequested = +quantityRoomsRequested.value;
+
+  if (!quantityRoomsRequested) {
+    result.reject.push('No hay habitaciones selecionadas');
+    return result;
+  }
+
+  var capacityPerRoom = (0, _getCapacityPerRoom.getCapacityPerRoom)(quantityRoomsRequested, capaRequested);
+  capacityPerRoom.forEach(function (value) {
+    var asssignedRoon = (0, _bucleFindEmptyRoom.getRoomSelected)(value);
+    result.resolve.push(asssignedRoon.idRoom);
+
+    _store.store.rooms.forEach(function (room) {
+      if (room.idRoom === asssignedRoon.idRoom) room.guest = guestId;
+    });
+  });
+  return result;
+};
+
+exports.getNewAssignedRooms = getNewAssignedRooms;
+},{"../../../store":"app/store.ts","./get-capacity-per-room":"app/pages/checkIn/components/get-capacity-per-room.ts","../../../components/bucle-find-empty-room":"app/components/bucle-find-empty-room.ts"}],"app/pages/checkIn/get-new-guest.ts":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.getNewGuest = void 0;
+
+var _getPhoneDatesCheckIn = require("./components/get-phone-dates-checkIn");
+
+var _constructorFunctions = require("../../components/constructor-functions");
+
+var _getNewAssignedRooms = require("./components/get-new-assigned-rooms");
+
+var getNewGuest = function getNewGuest(newMembers) {
+  var result = {
+    resolve: [],
+    reject: []
+  };
+  var phoneDatesCheckInOut = (0, _getPhoneDatesCheckIn.getPhoneDatesCheckIn)();
+
+  if (phoneDatesCheckInOut.reject.length) {
+    result.reject.push(phoneDatesCheckInOut.reject);
+    return result;
+  }
+
+  var newIdGuest = "" + Math.floor(Math.random() * 99999999);
+  var newAssignedRooms = (0, _getNewAssignedRooms.getNewAssignedRooms)(newMembers, newIdGuest);
+
+  if (newAssignedRooms.reject.length) {
+    result.reject.push(newAssignedRooms.reject);
+    return result;
+  }
+
+  var newGuest = new _constructorFunctions.Guest(newIdGuest, newMembers[0], phoneDatesCheckInOut.resolve[0], newAssignedRooms.resolve, phoneDatesCheckInOut.resolve[1], phoneDatesCheckInOut.resolve[2], false);
+  result.resolve.push(newGuest);
+  return result;
+};
+
+exports.getNewGuest = getNewGuest;
+},{"./components/get-phone-dates-checkIn":"app/pages/checkIn/components/get-phone-dates-checkIn.ts","../../components/constructor-functions":"app/components/constructor-functions.ts","./components/get-new-assigned-rooms":"app/pages/checkIn/components/get-new-assigned-rooms.ts"}],"app/pages/checkIn/register-guest-in-store.ts":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -431,7 +668,11 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.registerGuestInStore = void 0;
 
-var _getNewMember = require("./get-New-Member");
+var _getNewMember = require("./components/get-new-member");
+
+var _getNewGuest = require("./get-new-guest");
+
+var _store = require("../../store");
 
 var registerGuestInStore = function registerGuestInStore() {
   var result = {
@@ -439,16 +680,42 @@ var registerGuestInStore = function registerGuestInStore() {
     reject: []
   };
   var form = document.querySelector('#formCheckIn');
-  form === null || form === void 0 ? void 0 : form.addEventListener('submit', function (event) {
+  var resultArea = document.querySelector('.resultCheckInArea');
+  var resultAreaResolve = document.querySelector('.resultCheckInAreaResolve');
+  var resultAreaReject = document.querySelector('.resultCheckInAreaReject');
+  form === null || form === void 0 ? void 0 : form.addEventListener('submit', function submitCheckIn(event) {
     event.preventDefault();
+    resultAreaResolve === null || resultAreaResolve === void 0 ? void 0 : resultAreaResolve.innerHTML = '';
+    resultAreaReject === null || resultAreaReject === void 0 ? void 0 : resultAreaReject.innerHTML = '';
     var newMembers = (0, _getNewMember.getNewMember)();
-    console.log(newMembers);
+
+    if (newMembers.reject.length) {
+      result.reject.push(newMembers.reject);
+    }
+
+    var newGuest = (0, _getNewGuest.getNewGuest)(newMembers.resolve);
+
+    if (newGuest.resolve.length !== 0) {
+      result.resolve.push(newGuest.resolve[0]);
+    }
+
+    if (newGuest.reject.length !== 0) {
+      result.reject.push(newGuest.reject);
+    }
+
+    if (newGuest.reject.length === 0) {
+      _store.store.guests.push(newGuest.resolve[0]);
+    }
+
+    console.log(result.resolve[0]);
+    resultArea === null || resultArea === void 0 ? void 0 : resultArea.classList.remove('d-none');
+    result.reject.length ? (resultAreaReject.classList.remove('d-none'), resultAreaReject.innerHTML = "<p class=\"bg-white rounded px-2 py-1 mt-2\">" + result.reject + "\n        </p>") : (resultAreaResolve.classList.remove('d-none'), resultAreaResolve.innerHTML = "<p class=\"bg-white rounded px-2 py-1 mt-2\">Habitacion asignada: " + result.resolve[0].asignedRoom + "<br>\n        IdGuest: " + result.resolve[0].idGuest + "<br>\n        CheckIn Date: " + result.resolve[0].checkInDate + "<br>\n        CheckOut Date: " + result.resolve[0].checkOutDate + "\n        </p>");
   });
   return result;
 };
 
 exports.registerGuestInStore = registerGuestInStore;
-},{"./get-New-Member":"app/pages/checkIn/get-New-Member.ts"}],"app/pages/checkIn/check-in.ts":[function(require,module,exports) {
+},{"./components/get-new-member":"app/pages/checkIn/components/get-new-member.ts","./get-new-guest":"app/pages/checkIn/get-new-guest.ts","../../store":"app/store.ts"}],"app/pages/checkIn/check-in.ts":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -463,8 +730,11 @@ var _resetMemberArea = require("./reset-member-area");
 var _registerGuestInStore = require("./register-guest-in-store");
 
 var checkInFunction = function checkInFunction() {
+  var _a;
+
   var addMemberButton = document.querySelector('#addMemberButton');
-  addMemberButton === null || addMemberButton === void 0 ? void 0 : addMemberButton.removeEventListener('click', _addMemberButton.onclickCallback, false);
+  addMemberButton === null || addMemberButton === void 0 ? void 0 : addMemberButton.removeEventListener('click', _addMemberButton.onclickCallbackAddMemberButton, false);
+  (_a = document.querySelector('.resultCheckInArea')) === null || _a === void 0 ? void 0 : _a.classList.add('d-none');
   (0, _resetMemberArea.resetMemberArea)();
   (0, _addMemberButton.addInputForMember)();
   (0, _registerGuestInStore.registerGuestInStore)();
@@ -489,19 +759,682 @@ Object.keys(_checkIn).forEach(function (key) {
     }
   });
 });
-},{"./check-in":"app/pages/checkIn/check-in.ts"}],"app/index.ts":[function(require,module,exports) {
+},{"./check-in":"app/pages/checkIn/check-in.ts"}],"app/pages/guest/components/show-members-details.ts":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.showMembersDetails = void 0;
+
+var _store = require("../../../store");
+
+var showMembersDetails = function showMembersDetails(areaMemberList, membersId) {
+  areaMemberList.children[0].innerHTML = "";
+
+  var guestToShow = _store.store.guests.find(function (guest) {
+    return guest.idGuest === membersId;
+  });
+
+  guestToShow.members.forEach(function (member) {
+    areaMemberList.children[0].insertAdjacentHTML('beforeend', "<ul>Name: " + member.name + " \u2192 IdCard: " + member.idCard + " \u2192 Age: " + member.age + "\n      </ul>");
+  });
+};
+
+exports.showMembersDetails = showMembersDetails;
+},{"../../../store":"app/store.ts"}],"app/pages/guest/list-guest.ts":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.listGuests = void 0;
+
+var _store = require("../../store");
+
+var _showMembersDetails = require("./components/show-members-details");
+
+var listGuests = function listGuests() {
+  var listGuestsTable = document.querySelector('#listGuestsTable');
+
+  if (listGuestsTable) {
+    listGuestsTable.innerHTML = '';
+
+    _store.store.guests.forEach(function (guest, index) {
+      listGuestsTable.insertAdjacentHTML('beforeend', "<tr class=\"table-success \">\n            <th scope=\"row\">" + (index + 1) + "</th>\n            <td class=\"pl-0\">" + guest.idGuest + "</td>\n            <td class=\"pl-0\">" + guest.checkInDate + "</td>\n            <td class=\"pl-0\">" + guest.checkOutDate + "</td>\n            <td class=\"pl-0\">" + guest.invoice + "</td>\n            <td class=\"pl-0\">" + guest.asignedRoom + "</td>\n            <td class=\"pl-0 d-flex justify-content-center \">\n            <button class=\"btn btn-success py-1 listMembers\" type=\"button\" id=\"" + guest.idGuest + "\">\n            " + guest.members.length + "  \u25BC\n            </button>\n            </div></td>\n            </tr>\n            <tr class=\"d-none\">\n            <td class=\"px-3\" colspan=\"7\" style=\"background-color:#c3e6cb\">          \n            </td></tr>\n                        ");
+    });
+  }
+
+  listGuestsTable === null || listGuestsTable === void 0 ? void 0 : listGuestsTable.addEventListener('click', function (event) {
+    if (event.target.classList.value.includes('listMembers')) {
+      var membersId = event.target.id;
+      var areaMemberList = event.target.parentElement.parentElement.nextElementSibling;
+      areaMemberList.classList.toggle('d-none');
+      (0, _showMembersDetails.showMembersDetails)(areaMemberList, membersId);
+    }
+  });
+};
+
+exports.listGuests = listGuests;
+},{"../../store":"app/store.ts","./components/show-members-details":"app/pages/guest/components/show-members-details.ts"}],"app/pages/guest/index.ts":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _listGuest = require("./list-guest");
+
+Object.keys(_listGuest).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function () {
+      return _listGuest[key];
+    }
+  });
+});
+},{"./list-guest":"app/pages/guest/list-guest.ts"}],"app/pages/invoice/components/get-guest-per-room.ts":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.getGuestPerRoom = void 0;
+
+var _store = require("../../../store");
+
+var getGuestPerRoom = function getGuestPerRoom() {
+  var roomToInvoice = document.querySelector('#roomToInvoice');
+
+  var result = _store.store.guests.find(function (value) {
+    if (value.asignedRoom.indexOf(roomToInvoice.valueAsNumber) + 1) return value;
+  });
+
+  return result;
+};
+
+exports.getGuestPerRoom = getGuestPerRoom;
+},{"../../../store":"app/store.ts"}],"app/pages/invoice/components/invoicing.ts":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.invoicing = void 0;
+
+var _store = require("../../../store");
+
+var invoicing = function invoicing(guest) {
+  var result = {
+    resolve: [],
+    reject: []
+  };
+  result.resolve.push(guest.asignedRoom);
+  var price = [];
+  guest.asignedRoom.forEach(function (room) {
+    var roomPrice = _store.store.rooms.find(function (value) {
+      return value.idRoom === room;
+    });
+
+    price.push(roomPrice.price);
+  });
+  var checkOutDate = new Date(guest.checkOutDate);
+  var checkInDate = new Date(guest.checkInDate);
+  var days = (checkOutDate - checkInDate) / (1000 * 60 * 60 * 24);
+  result.resolve.push(price.map(function (value) {
+    return value * days;
+  }));
+
+  _store.store.guests.forEach(function (value) {
+    if (value.idGuest === guest.idGuest) value.invoice = true;
+  });
+
+  return result.resolve;
+};
+
+exports.invoicing = invoicing;
+},{"../../../store":"app/store.ts"}],"app/pages/invoice/components/print-invoice-result.ts":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.printInvoiceResult = void 0;
+
+var printInvoiceResult = function printInvoiceResult(information) {
+  var areaPrint = document.querySelector('#invoiceResult');
+  areaPrint === null || areaPrint === void 0 ? void 0 : areaPrint.classList.add('d-none');
+  areaPrint === null || areaPrint === void 0 ? void 0 : areaPrint.classList.remove('d-none');
+
+  if (information.length === 1) {
+    areaPrint === null || areaPrint === void 0 ? void 0 : areaPrint.innerHTML = '';
+    areaPrint === null || areaPrint === void 0 ? void 0 : areaPrint.insertAdjacentHTML('beforeend', "<p class=\"rounded bg-white py-2 px-2\">" + information + "</p><p class=\"py-2 px-2\">\n      Muchas gracias por la visita</p>");
+  }
+
+  if (information.length === 2) {
+    areaPrint === null || areaPrint === void 0 ? void 0 : areaPrint.innerHTML = '';
+    information[0].forEach(function (value, index) {
+      areaPrint === null || areaPrint === void 0 ? void 0 : areaPrint.insertAdjacentHTML('beforeend', "\n        <li class=\"py-2 px-2\">Por la habitacion " + value + " debe pagar " + information[1][index] + " \u20AC</li>\n        ");
+    });
+    areaPrint === null || areaPrint === void 0 ? void 0 : areaPrint.insertAdjacentHTML('beforeend', "<h6 class=\"py-2 px-2\">La factura total asciende a " + information[1].reduce(function (accumulator, currentValue) {
+      return accumulator + currentValue;
+    }) + " \u20AC</h6><p class=\"py-2 px-2\">Muchas gracias por la visita</p>");
+  }
+};
+
+exports.printInvoiceResult = printInvoiceResult;
+},{}],"app/pages/invoice/callback-invoice.ts":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.callbackInvoice = void 0;
+
+var _getGuestPerRoom = require("./components/get-guest-per-room");
+
+var _invoicing = require("./components/invoicing");
+
+var _printInvoiceResult = require("./components/print-invoice-result");
+
+var callbackInvoice = function callbackInvoice(event) {
+  event.preventDefault();
+  var result = {
+    resolve: [],
+    reject: []
+  };
+  result.reject.splice(0, 3);
+  result.resolve.splice(0, 3);
+  var guest = (0, _getGuestPerRoom.getGuestPerRoom)();
+
+  if (guest === undefined) {
+    result.reject.push('Habitacion no encontrada');
+  }
+
+  if (guest) {
+    guest.invoice ? result.reject.push('Habitacion ya pagada, puede hacer CheckIn') : result.resolve = (0, _invoicing.invoicing)(guest);
+  }
+
+  if (result.reject.length) {
+    (0, _printInvoiceResult.printInvoiceResult)(result.reject);
+  }
+
+  if (result.resolve.length) {
+    (0, _printInvoiceResult.printInvoiceResult)(result.resolve);
+  }
+};
+
+exports.callbackInvoice = callbackInvoice;
+},{"./components/get-guest-per-room":"app/pages/invoice/components/get-guest-per-room.ts","./components/invoicing":"app/pages/invoice/components/invoicing.ts","./components/print-invoice-result":"app/pages/invoice/components/print-invoice-result.ts"}],"app/pages/invoice/invoice.ts":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.invoiceFunction = void 0;
+
+var _callbackInvoice = require("./callback-invoice");
+
+var invoiceFunction = function invoiceFunction() {
+  var _a;
+
+  (_a = document.querySelector('#invoiceResult')) === null || _a === void 0 ? void 0 : _a.classList.add('d-none');
+  var invoiceForm = document.querySelector('#invoiceForm');
+
+  if (invoiceForm) {
+    invoiceForm.removeEventListener('submit', _callbackInvoice.callbackInvoice);
+    invoiceForm.addEventListener('submit', _callbackInvoice.callbackInvoice);
+  }
+};
+
+exports.invoiceFunction = invoiceFunction;
+},{"./callback-invoice":"app/pages/invoice/callback-invoice.ts"}],"app/pages/invoice/index.ts":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _invoice = require("./invoice");
+
+Object.keys(_invoice).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function () {
+      return _invoice[key];
+    }
+  });
+});
+},{"./invoice":"app/pages/invoice/invoice.ts"}],"app/pages/weather/components/get-location-api.ts":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.getLocationApi = void 0;
+
+var __awaiter = void 0 && (void 0).__awaiter || function (thisArg, _arguments, P, generator) {
+  function adopt(value) {
+    return value instanceof P ? value : new P(function (resolve) {
+      resolve(value);
+    });
+  }
+
+  return new (P || (P = Promise))(function (resolve, reject) {
+    function fulfilled(value) {
+      try {
+        step(generator.next(value));
+      } catch (e) {
+        reject(e);
+      }
+    }
+
+    function rejected(value) {
+      try {
+        step(generator["throw"](value));
+      } catch (e) {
+        reject(e);
+      }
+    }
+
+    function step(result) {
+      result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected);
+    }
+
+    step((generator = generator.apply(thisArg, _arguments || [])).next());
+  });
+};
+
+var __generator = void 0 && (void 0).__generator || function (thisArg, body) {
+  var _ = {
+    label: 0,
+    sent: function sent() {
+      if (t[0] & 1) throw t[1];
+      return t[1];
+    },
+    trys: [],
+    ops: []
+  },
+      f,
+      y,
+      t,
+      g;
+  return g = {
+    next: verb(0),
+    "throw": verb(1),
+    "return": verb(2)
+  }, typeof Symbol === "function" && (g[Symbol.iterator] = function () {
+    return this;
+  }), g;
+
+  function verb(n) {
+    return function (v) {
+      return step([n, v]);
+    };
+  }
+
+  function step(op) {
+    if (f) throw new TypeError("Generator is already executing.");
+
+    while (_) {
+      try {
+        if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
+        if (y = 0, t) op = [op[0] & 2, t.value];
+
+        switch (op[0]) {
+          case 0:
+          case 1:
+            t = op;
+            break;
+
+          case 4:
+            _.label++;
+            return {
+              value: op[1],
+              done: false
+            };
+
+          case 5:
+            _.label++;
+            y = op[1];
+            op = [0];
+            continue;
+
+          case 7:
+            op = _.ops.pop();
+
+            _.trys.pop();
+
+            continue;
+
+          default:
+            if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) {
+              _ = 0;
+              continue;
+            }
+
+            if (op[0] === 3 && (!t || op[1] > t[0] && op[1] < t[3])) {
+              _.label = op[1];
+              break;
+            }
+
+            if (op[0] === 6 && _.label < t[1]) {
+              _.label = t[1];
+              t = op;
+              break;
+            }
+
+            if (t && _.label < t[2]) {
+              _.label = t[2];
+
+              _.ops.push(op);
+
+              break;
+            }
+
+            if (t[2]) _.ops.pop();
+
+            _.trys.pop();
+
+            continue;
+        }
+
+        op = body.call(thisArg, _);
+      } catch (e) {
+        op = [6, e];
+        y = 0;
+      } finally {
+        f = t = 0;
+      }
+    }
+
+    if (op[0] & 5) throw op[1];
+    return {
+      value: op[0] ? op[1] : void 0,
+      done: true
+    };
+  }
+};
+
+var APIKEY = 'w42UjDijls6DictTC5GWNzehDFloFKJD';
+var BASEURL = "http://dataservice.accuweather.com/locations/v1/cities/search";
+
+var getLocationApi = function getLocationApi(location) {
+  return __awaiter(void 0, void 0, void 0, function () {
+    var resultLocation, dataLocation;
+    return __generator(this, function (_a) {
+      switch (_a.label) {
+        case 0:
+          return [4, fetch(BASEURL + "?apikey=" + APIKEY + "&q=" + location + "&details=true")];
+
+        case 1:
+          resultLocation = _a.sent();
+          return [4, resultLocation.json()];
+
+        case 2:
+          dataLocation = _a.sent();
+          return [2, dataLocation];
+      }
+    });
+  });
+};
+
+exports.getLocationApi = getLocationApi;
+},{}],"app/pages/weather/components/get-weather-api.ts":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.getWeatherApi = void 0;
+
+var __awaiter = void 0 && (void 0).__awaiter || function (thisArg, _arguments, P, generator) {
+  function adopt(value) {
+    return value instanceof P ? value : new P(function (resolve) {
+      resolve(value);
+    });
+  }
+
+  return new (P || (P = Promise))(function (resolve, reject) {
+    function fulfilled(value) {
+      try {
+        step(generator.next(value));
+      } catch (e) {
+        reject(e);
+      }
+    }
+
+    function rejected(value) {
+      try {
+        step(generator["throw"](value));
+      } catch (e) {
+        reject(e);
+      }
+    }
+
+    function step(result) {
+      result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected);
+    }
+
+    step((generator = generator.apply(thisArg, _arguments || [])).next());
+  });
+};
+
+var __generator = void 0 && (void 0).__generator || function (thisArg, body) {
+  var _ = {
+    label: 0,
+    sent: function sent() {
+      if (t[0] & 1) throw t[1];
+      return t[1];
+    },
+    trys: [],
+    ops: []
+  },
+      f,
+      y,
+      t,
+      g;
+  return g = {
+    next: verb(0),
+    "throw": verb(1),
+    "return": verb(2)
+  }, typeof Symbol === "function" && (g[Symbol.iterator] = function () {
+    return this;
+  }), g;
+
+  function verb(n) {
+    return function (v) {
+      return step([n, v]);
+    };
+  }
+
+  function step(op) {
+    if (f) throw new TypeError("Generator is already executing.");
+
+    while (_) {
+      try {
+        if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
+        if (y = 0, t) op = [op[0] & 2, t.value];
+
+        switch (op[0]) {
+          case 0:
+          case 1:
+            t = op;
+            break;
+
+          case 4:
+            _.label++;
+            return {
+              value: op[1],
+              done: false
+            };
+
+          case 5:
+            _.label++;
+            y = op[1];
+            op = [0];
+            continue;
+
+          case 7:
+            op = _.ops.pop();
+
+            _.trys.pop();
+
+            continue;
+
+          default:
+            if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) {
+              _ = 0;
+              continue;
+            }
+
+            if (op[0] === 3 && (!t || op[1] > t[0] && op[1] < t[3])) {
+              _.label = op[1];
+              break;
+            }
+
+            if (op[0] === 6 && _.label < t[1]) {
+              _.label = t[1];
+              t = op;
+              break;
+            }
+
+            if (t && _.label < t[2]) {
+              _.label = t[2];
+
+              _.ops.push(op);
+
+              break;
+            }
+
+            if (t[2]) _.ops.pop();
+
+            _.trys.pop();
+
+            continue;
+        }
+
+        op = body.call(thisArg, _);
+      } catch (e) {
+        op = [6, e];
+        y = 0;
+      } finally {
+        f = t = 0;
+      }
+    }
+
+    if (op[0] & 5) throw op[1];
+    return {
+      value: op[0] ? op[1] : void 0,
+      done: true
+    };
+  }
+};
+
+var APIKEY = 'w42UjDijls6DictTC5GWNzehDFloFKJD';
+var BASEURL = "http://dataservice.accuweather.com/forecasts/v1/daily/1day/";
+
+var getWeatherApi = function getWeatherApi(locationKey) {
+  return __awaiter(void 0, void 0, void 0, function () {
+    var resultWeather, dataWeather;
+    return __generator(this, function (_a) {
+      switch (_a.label) {
+        case 0:
+          return [4, fetch("" + BASEURL + locationKey + "?apikey=" + APIKEY + "&language=es-ES&details=true&metric=true")];
+
+        case 1:
+          resultWeather = _a.sent();
+          return [4, resultWeather.json()];
+
+        case 2:
+          dataWeather = _a.sent();
+          return [2, dataWeather];
+      }
+    });
+  });
+};
+
+exports.getWeatherApi = getWeatherApi;
+},{}],"app/pages/weather/components/print-result-weather.ts":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.printResultWeather = void 0;
+
+var printResultWeather = function printResultWeather(data) {
+  var weatherTitle = document.querySelector('.weatherTitle');
+  var weatherTemperatureMax = document.querySelector('.weatherTemperatureMax');
+  var weatherTemperatureMin = document.querySelector('.weatherTemperatureMin');
+  var weatherImg = document.querySelector('.weatherImg');
+  weatherTitle.textContent = '';
+  weatherTitle.textContent = "" + data.Headline.Text;
+  weatherTemperatureMax.textContent = '';
+  weatherTemperatureMax.textContent = data.DailyForecasts[0].Temperature.Maximum.Value + " \xBAC";
+  weatherTemperatureMin.textContent = '';
+  weatherTemperatureMin.textContent = data.DailyForecasts[0].Temperature.Minimum.Value + " \xBAC";
+  weatherImg.src = "./weather/" + data.DailyForecasts[0].Day.Icon + "-s.png";
+  weatherImg.alt = "" + data.DailyForecasts[0].Day.Icon;
+};
+
+exports.printResultWeather = printResultWeather;
+},{}],"app/pages/weather/weather.ts":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.weather = void 0;
+
+var _getLocationApi = require("./components/get-location-api");
+
+var _getWeatherApi = require("./components/get-weather-api");
+
+var _printResultWeather = require("./components/print-result-weather");
+
+var weather = function weather() {
+  var locationForm = document.querySelector('#cityToFindForm');
+  var locationInput = document.querySelector('#cityToFind');
+  var showCardResult = document.querySelector('#weatherResult');
+  showCardResult === null || showCardResult === void 0 ? void 0 : showCardResult.classList.add('d-none');
+  locationForm === null || locationForm === void 0 ? void 0 : locationForm.addEventListener('submit', function (event) {
+    event.preventDefault();
+
+    if (locationInput) {
+      var locationData = (0, _getLocationApi.getLocationApi)(locationInput.value);
+      locationData.then(function (data) {
+        var weatherData = (0, _getWeatherApi.getWeatherApi)(data[0].Key);
+        weatherData.then(function (data) {
+          showCardResult === null || showCardResult === void 0 ? void 0 : showCardResult.classList.remove('d-none');
+          (0, _printResultWeather.printResultWeather)(data);
+        });
+      });
+    }
+  });
+};
+
+exports.weather = weather;
+},{"./components/get-location-api":"app/pages/weather/components/get-location-api.ts","./components/get-weather-api":"app/pages/weather/components/get-weather-api.ts","./components/print-result-weather":"app/pages/weather/components/print-result-weather.ts"}],"app/index.ts":[function(require,module,exports) {
 "use strict";
 
 var _rooms = require("./pages/rooms");
 
 var _checkIn = require("./pages/checkIn");
 
+var _guest = require("./pages/guest");
+
+var _invoice = require("./pages/invoice");
+
+var _weather = require("./pages/weather/weather");
+
 var areaButtonsButton = document.querySelector('#areaButtons');
 var goBackButton = document.querySelector('#goBack');
 var area;
 areaButtonsButton === null || areaButtonsButton === void 0 ? void 0 : areaButtonsButton.addEventListener('click', function (event) {
   area = document.querySelector("#" + event.target.id + "Area");
-  console.log(area.id);
 
   if (area && goBackButton) {
     areaButtonsButton.classList.add('d-none');
@@ -513,8 +1446,20 @@ areaButtonsButton === null || areaButtonsButton === void 0 ? void 0 : areaButton
         (0, _rooms.listRoom)();
         break;
 
+      case 'listGuestsArea':
+        (0, _guest.listGuests)();
+        break;
+
       case 'checkInArea':
         (0, _checkIn.checkInFunction)();
+        break;
+
+      case 'invoiceArea':
+        (0, _invoice.invoiceFunction)();
+        break;
+
+      case 'weatherArea':
+        (0, _weather.weather)();
         break;
     }
   }
@@ -527,7 +1472,7 @@ if (goBackButton && areaButtonsButton) {
     goBackButton.classList.add('d-none');
   });
 }
-},{"./pages/rooms":"app/pages/rooms/index.ts","./pages/checkIn":"app/pages/checkIn/index.ts"}],"C:/Users/Usuario/AppData/Roaming/npm/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+},{"./pages/rooms":"app/pages/rooms/index.ts","./pages/checkIn":"app/pages/checkIn/index.ts","./pages/guest":"app/pages/guest/index.ts","./pages/invoice":"app/pages/invoice/index.ts","./pages/weather/weather":"app/pages/weather/weather.ts"}],"C:/Users/Usuario/AppData/Roaming/npm/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -555,7 +1500,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "55052" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "49263" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

@@ -1,10 +1,14 @@
 export const addInputForMember = () => {
   const addMemberButton = document.querySelector('#addMemberButton');
 
-  addMemberButton?.addEventListener('click', onclickCallback, false);
+  addMemberButton?.addEventListener(
+    'click',
+    onclickCallbackAddMemberButton,
+    false
+  );
 };
 
-export const onclickCallback = () => {
+export const onclickCallbackAddMemberButton = () => {
   const addInputMember = document.querySelector('.addPerson');
   addInputMember.insertAdjacentHTML(
     'afterend',

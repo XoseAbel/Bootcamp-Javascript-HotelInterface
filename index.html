@@ -80,6 +80,15 @@
             List Rooms
           </button>
         </div>
+        <div class="col d-flex justify-content-around my-3">
+          <button
+            type="button"
+            class="btn btn-lg btn-success tx-white"
+            id="weather"
+          >
+            Weather
+          </button>
+        </div>
       </div>
       <div class="row d-flex justify-content-center">
         <button
@@ -87,7 +96,7 @@
           class="btn btn-lg btn-danger tx-white d-none"
           id="goBack"
         >
-          goBack
+          Regresar
         </button>
       </div>
       <div class="row flex-column py-3 d-none" id="checkInArea">
@@ -111,22 +120,52 @@
               />
             </div>
           </div>
-          <div class="form-row">
+          <div class="form-row mt-3">
             <div class="form-group col-md-4">
               <label for="phone" class="bg-white rounded px-2">Phone</label>
-              <input type="text" class="form-control" id="phone" />
+              <input type="text" class="form-control" id="phone" value="0" />
             </div>
             <div class="form-group col-md-4">
               <label for="checkInDate" class="bg-white rounded px-2"
                 >Check In Date</label
               >
-              <input type="date" class="form-control" id="checkInDate" />
+              <input
+                type="date"
+                class="form-control"
+                id="checkInDate"
+                value="2020-06-06"
+              />
             </div>
             <div class="form-group col-md-4">
               <label for="checkOutDate" class="bg-white rounded px-2"
                 >Check Out Date</label
               >
-              <input type="date" class="form-control" id="checkOutDate" />
+              <input
+                type="date"
+                class="form-control"
+                id="checkOutDate"
+                value="2020-06-06"
+              />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col-md-4">
+              <label for="selectNumberRooms" class="bg-white rounded px-2"
+                >Number of Rooms</label
+              >
+              <select class="form-control" id="selectNumberRooms">
+                <option selected disabled value="0">Rooms requested...</option>
+                <option>1</option>
+                <option>2</option>
+                <option>3</option>
+                <option>4</option>
+                <option>5</option>
+              </select>
+            </div>
+            <div class="form-group col-md-8 resultCheckInArea d-none">
+              <span class="bg-white rounded px-2 my-2">Result:</span>
+              <span class="resultCheckInAreaResolve"></span>
+              <span class="resultCheckInAreaReject"></span>
             </div>
           </div>
           <button type="submit" class="btn btn-success">Check In</button>
@@ -138,15 +177,28 @@
       <div class="row flex-column py-3 d-none" id="checkOutArea">
         checkOutArea
       </div>
-      <div class="row flex-column py-3 d-none" id="listGuestsArea">
-        listGuestArea
+      <div class="row mx-4 flex-column py-3 d-none" id="listGuestsArea">
+        <table class="table">
+          <thead class="thead-light">
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col" class="pl-0">Id Guest</th>
+              <th scope="col" class="pl-0">Check In Date</th>
+              <th scope="col" class="pl-0">Check Out Date</th>
+              <th scope="col" class="pl-0">Invoice</th>
+              <th scope="col" class="pl-0">Rooms</th>
+              <th scope="col" class="pl-0">Members</th>
+            </tr>
+          </thead>
+          <tbody id="listGuestsTable"></tbody>
+        </table>
       </div>
       <div class="row mx-5 flex-column py-3 d-none" id="listRoomsArea">
         <table class="table">
           <thead class="thead-light">
             <tr>
               <th scope="col">#</th>
-              <th scope="col">idRoom</th>
+              <th scope="col">idGuest</th>
               <th scope="col">Capacity</th>
               <th scope="col">Price</th>
             </tr>
@@ -157,8 +209,56 @@
       <div class="row flex-column py-3 d-none" id="changeRoomArea">
         changeRoomArea
       </div>
-      <div class="row flex-column py-3 d-none" id="invoiceArea">
-        invoiceArea
+      <div class="row flex-row py-3 d-none" id="invoiceArea">
+        <form class="col-4" id="invoiceForm">
+          <label class="bg-white rounded px-2" for="roomToInvoice"
+            >Room to Invoice</label
+          >
+          <input
+            type="number"
+            class="form-control"
+            id="roomToInvoice"
+            min="101"
+            max="404"
+          />
+          <button type="submit" class="btn btn-success mt-2">Invoice</button>
+        </form>
+        <div
+          class="col-8 d-none pt-4 px-4 rounded bg-white"
+          id="invoiceResult"
+        ></div>
+      </div>
+      <div class="row flex-row py-3 d-none" id="weatherArea">
+        <form class="col-md-4" id="cityToFindForm">
+          <div class="form-group">
+            <label class="bg-white rounded px-2" for="cityToFind"
+              >Nombre Ciudad</label
+            >
+            <input
+              type="text"
+              class="form-control"
+              id="cityToFind"
+              aria-describedby="cityToFind"
+            />
+          </div>
+          <button type="submit" class="btn btn-success ml-3">Submit</button>
+        </form>
+        <div class="mb-3 col-md-8 d-none" id="weatherResult">
+          <div class="mx-4 py-2 bg-white rounded row no-gutters">
+            <div class="col-md-3 d-flex justify-content-center p-3">
+              <img src="" class="weatherImg" alt="" />
+            </div>
+            <div class="col-md-9">
+              <div class="weatherBody">
+                <h5 class="weatherTitle"></h5>
+                <ul>
+                  <li class="weatherTemperatureMax"></li>
+                  <li class="weatherTemperatureMin"></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
     <script src="./app/index.ts"></script>
