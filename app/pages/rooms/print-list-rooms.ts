@@ -10,6 +10,7 @@ const printListRooms = listToPrint => {
       <th scope="col" class="py-1">${value.idRoom}</th>
       <th scope="col" class="py-1">${value.maxCapacity}</th>
       <th scope="col" class="py-1">${value.price}</th>
+      <th scope="col" class="py-1">${value.guest}</th>
     </tr>`
       );
     });

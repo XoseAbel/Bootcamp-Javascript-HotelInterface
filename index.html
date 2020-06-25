@@ -123,29 +123,19 @@
           <div class="form-row mt-3">
             <div class="form-group col-md-4">
               <label for="phone" class="bg-white rounded px-2">Phone</label>
-              <input type="text" class="form-control" id="phone" value="0" />
+              <input type="text" class="form-control" id="phone" />
             </div>
             <div class="form-group col-md-4">
               <label for="checkInDate" class="bg-white rounded px-2"
                 >Check In Date</label
               >
-              <input
-                type="date"
-                class="form-control"
-                id="checkInDate"
-                value="2020-06-06"
-              />
+              <input type="date" class="form-control" id="checkInDate" />
             </div>
             <div class="form-group col-md-4">
               <label for="checkOutDate" class="bg-white rounded px-2"
                 >Check Out Date</label
               >
-              <input
-                type="date"
-                class="form-control"
-                id="checkOutDate"
-                value="2020-06-06"
-              />
+              <input type="date" class="form-control" id="checkOutDate" />
             </div>
           </div>
           <div class="form-row">
@@ -174,8 +164,21 @@
           </button>
         </form>
       </div>
-      <div class="row flex-column py-3 d-none" id="checkOutArea">
-        checkOutArea
+      <div class="row flex-row py-3 d-none" id="checkOutArea">
+        <form class="col-4" id="checkOutForm">
+          <label class="bg-white rounded px-2" for="roomToCheckOut"
+            >Room to CheckOut</label
+          >
+          <input
+            type="number"
+            class="form-control"
+            id="roomToCheckOut"
+            min="101"
+            max="404"
+          />
+          <button type="submit" class="btn btn-success mt-2">CheckOut</button>
+        </form>
+        <div class="col-8 pt-4 px-4 rounded bg-white" id="CheckOutResult"></div>
       </div>
       <div class="row mx-4 flex-column py-3 d-none" id="listGuestsArea">
         <table class="table">
@@ -198,16 +201,56 @@
           <thead class="thead-light">
             <tr>
               <th scope="col">#</th>
-              <th scope="col">idGuest</th>
+              <th scope="col">id Room</th>
               <th scope="col">Capacity</th>
               <th scope="col">Price</th>
+              <th scope="col">Guest</th>
             </tr>
           </thead>
           <tbody id="listRoomsTable"></tbody>
         </table>
       </div>
-      <div class="row flex-column py-3 d-none" id="changeRoomArea">
-        changeRoomArea
+      <div class="row flex-row py-3 d-none" id="changeRoomArea">
+        <form class="col-3" id="changeRoomForm">
+          <div class="form-group">
+            <label class="bg-white rounded col-12 py-2" for="changeRoom"
+              >Change Rooms</label
+            >
+            <select
+              multiple="multiple"
+              class="form-control"
+              id="changeRoomSelect"
+            >
+              <option>101</option>
+              <option>102</option>
+              <option>103</option>
+              <option>104</option>
+              <option>201</option>
+              <option>202</option>
+              <option>203</option>
+              <option>204</option>
+              <option>301</option>
+              <option>302</option>
+              <option>303</option>
+              <option>304</option>
+              <option>401</option>
+              <option>402</option>
+              <option>403</option>
+              <option>404</option>
+            </select>
+          </div>
+          <button type="submit" class="btn btn-success mt-2">
+            Change Room
+          </button>
+        </form>
+        <div
+          class="col-3 d-none py-3 px-2 rounded bg-white"
+          id="changeRoomAreaGuestInfo"
+        ></div>
+        <div
+          class="col-6 d-none py-3 px-2 rounded bg-white"
+          id="changeRoomAreaResult"
+        ></div>
       </div>
       <div class="row flex-row py-3 d-none" id="invoiceArea">
         <form class="col-4" id="invoiceForm">

@@ -2,7 +2,11 @@ import { listRoom } from './pages/rooms';
 import { checkInFunction } from './pages/checkIn';
 import { listGuests } from './pages/guest';
 import { invoiceFunction } from './pages/invoice';
-import { weather } from './pages/weather/weather';
+import { weather } from './pages/weather';
+import { checkOut } from './pages/checkOut';
+import { hideElements } from './components/hide-elements';
+import { showElements } from './components/show-elements';
+import { changeRoom } from './pages/changeRoom';
 
 // Panel de seleccion
 const areaButtonsButton = document.querySelector('#areaButtons');
@@ -13,9 +17,8 @@ areaButtonsButton?.addEventListener('click', (event: any) => {
   area = document.querySelector(`#${event.target.id}Area`);
   //Cheack null
   if (area && goBackButton) {
-    areaButtonsButton.classList.add('d-none');
-    area.classList.remove('d-none');
-    goBackButton.classList.remove('d-none');
+    hideElements([areaButtonsButton]);
+    showElements([area, goBackButton]);
     switch (area.id) {
       case 'listRoomsArea':
         listRoom();
@@ -32,6 +35,12 @@ areaButtonsButton?.addEventListener('click', (event: any) => {
       case 'weatherArea':
         weather();
         break;
+      case 'checkOutArea':
+        checkOut();
+        break;
+      case 'changeRoomArea':
+        changeRoom();
+        break;
     }
   }
 });
@@ -39,8 +48,7 @@ areaButtonsButton?.addEventListener('click', (event: any) => {
 //Cheack null
 if (goBackButton && areaButtonsButton) {
   goBackButton.addEventListener('click', () => {
-    areaButtonsButton.classList.remove('d-none');
-    area.classList.add('d-none');
-    goBackButton.classList.add('d-none');
+    showElements([areaButtonsButton]);
+    hideElements([area, goBackButton]);
   });
 }

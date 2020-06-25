@@ -24,5 +24,12 @@ export const invoicing = (guest: guest) => {
   store.guests.forEach(value => {
     if (value.idGuest === guest.idGuest) value.invoice = true;
   });
+  // buscar miembros en previousCustomer
+  const previousCheck = store.previousCustomers.find(value =>
+    guest.members.some(member => member.idCard === value.idCard)
+  );
+  if (previousCheck) {
+    result.resolve.push('Previous');
+  }
   return result.resolve;
 };

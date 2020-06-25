@@ -117,24 +117,7 @@ parcelRequire = (function (modules, cache, entry, globalName) {
   }
 
   return newRequire;
-})({"app/components/get-empty-rooms.ts":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.getEmptyRooms = void 0;
-
-var getEmptyRooms = function getEmptyRooms(store) {
-  var result;
-  result = store.rooms.filter(function (value) {
-    return value.guest === '';
-  });
-  return result;
-};
-
-exports.getEmptyRooms = getEmptyRooms;
-},{}],"app/store.ts":[function(require,module,exports) {
+})({"app/store.ts":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -143,7 +126,23 @@ Object.defineProperty(exports, "__esModule", {
 exports.store = void 0;
 var store = {
   guests: [{
-    idGuest: '6578',
+    idGuest: '65478',
+    members: [{
+      idCard: '92325678',
+      name: 'Peter',
+      age: 20
+    }, {
+      idCard: '99348678',
+      name: 'Sarah',
+      age: 20
+    }],
+    phone: '19009090',
+    asignedRoom: [101],
+    checkInDate: '2020/06/16',
+    checkOutDate: '2020/06/26',
+    invoice: true
+  }, {
+    idGuest: '98278',
     members: [{
       idCard: '12345678',
       name: 'Peter',
@@ -154,10 +153,10 @@ var store = {
       age: 20
     }],
     phone: '09009090',
-    asignedRoom: [101],
+    asignedRoom: [401],
     checkInDate: '2020/06/16',
     checkOutDate: '2020/06/26',
-    invoice: true
+    invoice: false
   }, {
     idGuest: '99378',
     members: [{
@@ -187,7 +186,7 @@ var store = {
     idRoom: 101,
     maxCapacity: 2,
     price: 60,
-    guest: '6578'
+    guest: '65478'
   }, {
     idRoom: 102,
     maxCapacity: 2,
@@ -222,7 +221,7 @@ var store = {
     idRoom: 204,
     maxCapacity: 3,
     price: 90,
-    guest: '6378'
+    guest: '99378'
   }, {
     idRoom: 301,
     maxCapacity: 4,
@@ -242,12 +241,12 @@ var store = {
     idRoom: 304,
     maxCapacity: 2,
     price: 100,
-    guest: '6378'
+    guest: '99378'
   }, {
     idRoom: 401,
     maxCapacity: 3,
     price: 120,
-    guest: ''
+    guest: '98278'
   }, {
     idRoom: 402,
     maxCapacity: 2,
@@ -289,7 +288,7 @@ var printListRooms = function printListRooms(listToPrint) {
   if (listRoomsTable) {
     listRoomsTable.innerHTML = '';
     listToPrint.forEach(function (value, index) {
-      listRoomsTable.insertAdjacentHTML('beforeend', "<tr class=\"table-success\">\n          <th scope=\"row\" class=\"py-1\">" + (index + 1) + "</th>\n      <th scope=\"col\" class=\"py-1\">" + value.idRoom + "</th>\n      <th scope=\"col\" class=\"py-1\">" + value.maxCapacity + "</th>\n      <th scope=\"col\" class=\"py-1\">" + value.price + "</th>\n    </tr>");
+      listRoomsTable.insertAdjacentHTML('beforeend', "<tr class=\"table-success\">\n          <th scope=\"row\" class=\"py-1\">" + (index + 1) + "</th>\n      <th scope=\"col\" class=\"py-1\">" + value.idRoom + "</th>\n      <th scope=\"col\" class=\"py-1\">" + value.maxCapacity + "</th>\n      <th scope=\"col\" class=\"py-1\">" + value.price + "</th>\n      <th scope=\"col\" class=\"py-1\">" + value.guest + "</th>\n    </tr>");
     });
   }
 };
@@ -303,19 +302,16 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.listRoom = void 0;
 
-var _getEmptyRooms = require("../../components/get-empty-rooms");
-
 var _store = require("../../store");
 
 var _printListRooms = require("./print-list-rooms");
 
 var listRoom = function listRoom() {
-  var listToPrint = (0, _getEmptyRooms.getEmptyRooms)(_store.store);
-  (0, _printListRooms.printListRooms)(listToPrint);
+  (0, _printListRooms.printListRooms)(_store.store.rooms);
 };
 
 exports.listRoom = listRoom;
-},{"../../components/get-empty-rooms":"app/components/get-empty-rooms.ts","../../store":"app/store.ts","./print-list-rooms":"app/pages/rooms/print-list-rooms.ts"}],"app/pages/rooms/index.ts":[function(require,module,exports) {
+},{"../../store":"app/store.ts","./print-list-rooms":"app/pages/rooms/print-list-rooms.ts"}],"app/pages/rooms/index.ts":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -497,6 +493,23 @@ var getCapacityPerRoom = function getCapacityPerRoom(qtyRooms, capaRequested) {
 };
 
 exports.getCapacityPerRoom = getCapacityPerRoom;
+},{}],"app/components/get-empty-rooms.ts":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.getEmptyRooms = void 0;
+
+var getEmptyRooms = function getEmptyRooms(store) {
+  var result;
+  result = store.rooms.filter(function (value) {
+    return value.guest === '';
+  });
+  return result;
+};
+
+exports.getEmptyRooms = getEmptyRooms;
 },{}],"app/components/get-assigned-room.ts":[function(require,module,exports) {
 "use strict";
 
@@ -646,7 +659,7 @@ var getNewGuest = function getNewGuest(newMembers) {
     return result;
   }
 
-  var newIdGuest = "" + Math.floor(Math.random() * 99999999);
+  var newIdGuest = "" + Math.floor(Math.random() * 99999);
   var newAssignedRooms = (0, _getNewAssignedRooms.getNewAssignedRooms)(newMembers, newIdGuest);
 
   if (newAssignedRooms.reject.length) {
@@ -890,11 +903,51 @@ var invoicing = function invoicing(guest) {
     if (value.idGuest === guest.idGuest) value.invoice = true;
   });
 
+  var previousCheck = _store.store.previousCustomers.find(function (value) {
+    return guest.members.some(function (member) {
+      return member.idCard === value.idCard;
+    });
+  });
+
+  if (previousCheck) {
+    result.resolve.push('Previous');
+  }
+
   return result.resolve;
 };
 
 exports.invoicing = invoicing;
-},{"../../../store":"app/store.ts"}],"app/pages/invoice/components/print-invoice-result.ts":[function(require,module,exports) {
+},{"../../../store":"app/store.ts"}],"app/components/hide-elements.ts":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.hideElements = void 0;
+
+var hideElements = function hideElements(element) {
+  element.forEach(function (value) {
+    return value.classList.add('d-none');
+  });
+};
+
+exports.hideElements = hideElements;
+},{}],"app/components/show-elements.ts":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.showElements = void 0;
+
+var showElements = function showElements(element) {
+  element.forEach(function (value) {
+    return value.classList.remove('d-none');
+  });
+};
+
+exports.showElements = showElements;
+},{}],"app/pages/invoice/components/print-invoice-result.ts":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -902,29 +955,46 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.printInvoiceResult = void 0;
 
+var _hideElements = require("../../../components/hide-elements");
+
+var _showElements = require("../../../components/show-elements");
+
 var printInvoiceResult = function printInvoiceResult(information) {
   var areaPrint = document.querySelector('#invoiceResult');
-  areaPrint === null || areaPrint === void 0 ? void 0 : areaPrint.classList.add('d-none');
-  areaPrint === null || areaPrint === void 0 ? void 0 : areaPrint.classList.remove('d-none');
+  (0, _hideElements.hideElements)([areaPrint]);
+  (0, _showElements.showElements)([areaPrint]);
 
   if (information.length === 1) {
     areaPrint === null || areaPrint === void 0 ? void 0 : areaPrint.innerHTML = '';
-    areaPrint === null || areaPrint === void 0 ? void 0 : areaPrint.insertAdjacentHTML('beforeend', "<p class=\"rounded bg-white py-2 px-2\">" + information + "</p><p class=\"py-2 px-2\">\n      Muchas gracias por la visita</p>");
+    areaPrint === null || areaPrint === void 0 ? void 0 : areaPrint.insertAdjacentHTML('beforeend', "<p class=\"py-2 px-2\">" + information + "</p><p class=\"py-2 px-2\">\n      Muchas gracias por la visita</p>");
   }
 
-  if (information.length === 2) {
+  if (information.length >= 2) {
     areaPrint === null || areaPrint === void 0 ? void 0 : areaPrint.innerHTML = '';
-    information[0].forEach(function (value, index) {
-      areaPrint === null || areaPrint === void 0 ? void 0 : areaPrint.insertAdjacentHTML('beforeend', "\n        <li class=\"py-2 px-2\">Por la habitacion " + value + " debe pagar " + information[1][index] + " \u20AC</li>\n        ");
-    });
-    areaPrint === null || areaPrint === void 0 ? void 0 : areaPrint.insertAdjacentHTML('beforeend', "<h6 class=\"py-2 px-2\">La factura total asciende a " + information[1].reduce(function (accumulator, currentValue) {
-      return accumulator + currentValue;
-    }) + " \u20AC</h6><p class=\"py-2 px-2\">Muchas gracias por la visita</p>");
+
+    if (!information[2]) {
+      information[0].forEach(function (value, index) {
+        areaPrint === null || areaPrint === void 0 ? void 0 : areaPrint.insertAdjacentHTML('beforeend', "\n      <li class=\"py-2 px-2\">Por la habitacion " + value + " debe pagar " + information[1][index] + " \u20AC</li>\n      ");
+      });
+      areaPrint === null || areaPrint === void 0 ? void 0 : areaPrint.insertAdjacentHTML('beforeend', "<h6 class=\"py-2 px-2\">La factura total asciende a " + information[1].reduce(function (accumulator, currentValue) {
+        return accumulator + currentValue;
+      }) + " \u20AC</h6><p class=\"py-2 px-2\">Muchas gracias por la visita</p>");
+    }
+
+    if (information[2]) {
+      areaPrint === null || areaPrint === void 0 ? void 0 : areaPrint.insertAdjacentHTML('beforeend', "<h6 class=\"py-2 px-2\">Es usted cliente previo\n         </h6>");
+      information[0].forEach(function (value, index) {
+        areaPrint === null || areaPrint === void 0 ? void 0 : areaPrint.insertAdjacentHTML('beforeend', "\n      <li class=\"py-2 px-2\">Por la habitacion " + value + " debe pagar " + information[1][index] * 0.9 + " \u20AC</li>\n      ");
+      });
+      areaPrint === null || areaPrint === void 0 ? void 0 : areaPrint.insertAdjacentHTML('beforeend', "<h6 class=\"py-2 px-2\">La factura total asciende a " + 0.9 * information[1].reduce(function (accumulator, currentValue) {
+        return accumulator + currentValue;
+      }) + " \u20AC</h6><p class=\"py-2 px-2\">Muchas gracias por volver a nuestro hotel</p>");
+    }
   }
 };
 
 exports.printInvoiceResult = printInvoiceResult;
-},{}],"app/pages/invoice/callback-invoice.ts":[function(require,module,exports) {
+},{"../../../components/hide-elements":"app/components/hide-elements.ts","../../../components/show-elements":"app/components/show-elements.ts"}],"app/pages/invoice/callback-invoice.ts":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -1417,7 +1487,396 @@ var weather = function weather() {
 };
 
 exports.weather = weather;
-},{"./components/get-location-api":"app/pages/weather/components/get-location-api.ts","./components/get-weather-api":"app/pages/weather/components/get-weather-api.ts","./components/print-result-weather":"app/pages/weather/components/print-result-weather.ts"}],"app/index.ts":[function(require,module,exports) {
+},{"./components/get-location-api":"app/pages/weather/components/get-location-api.ts","./components/get-weather-api":"app/pages/weather/components/get-weather-api.ts","./components/print-result-weather":"app/pages/weather/components/print-result-weather.ts"}],"app/pages/weather/index.ts":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _weather = require("./weather");
+
+Object.keys(_weather).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function () {
+      return _weather[key];
+    }
+  });
+});
+},{"./weather":"app/pages/weather/weather.ts"}],"app/pages/checkOut/components/get-guest-per-room.ts":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.getGuestPerRoom = void 0;
+
+var _store = require("../../../store");
+
+var getGuestPerRoom = function getGuestPerRoom() {
+  var roomToCheckOut = document.querySelector('#roomToCheckOut');
+
+  var result = _store.store.guests.find(function (value) {
+    if (value.asignedRoom.indexOf(roomToCheckOut.valueAsNumber) + 1) return value;
+  });
+
+  return result;
+};
+
+exports.getGuestPerRoom = getGuestPerRoom;
+},{"../../../store":"app/store.ts"}],"app/pages/checkOut/components/checkOut-guest.ts":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.checkOutGuest = void 0;
+
+var _store = require("../../../store");
+
+var checkOutGuest = function checkOutGuest(guest) {
+  var asignedRoom = guest.asignedRoom;
+
+  _store.store.rooms.forEach(function (room) {
+    if (asignedRoom.some(function (value) {
+      return value === room.idRoom;
+    })) {
+      room.guest = '';
+    }
+  });
+
+  var index = _store.store.guests.findIndex(function (value) {
+    return value.idGuest === guest.idGuest;
+  });
+
+  _store.store.guests.splice(index, 1);
+
+  guest.members.forEach(function (member) {
+    return _store.store.previousCustomers.push(member);
+  });
+  return asignedRoom;
+};
+
+exports.checkOutGuest = checkOutGuest;
+},{"../../../store":"app/store.ts"}],"app/pages/checkOut/components/print-checkOut-result.ts":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.printCheckOutResult = void 0;
+
+var _showElements = require("../../../components/show-elements");
+
+var _hideElements = require("../../../components/hide-elements");
+
+var printCheckOutResult = function printCheckOutResult(information) {
+  var resultArea = document.querySelector('#CheckOutResult');
+  (0, _hideElements.hideElements)([resultArea]);
+  (0, _showElements.showElements)([resultArea]);
+
+  if (information.reject.length) {
+    resultArea === null || resultArea === void 0 ? void 0 : resultArea.innerHTML = '';
+    resultArea === null || resultArea === void 0 ? void 0 : resultArea.insertAdjacentHTML('beforeend', "<p class=\"p-2\">" + information.reject + "\n    </p>\n    <p class=\"p-2\">Muchas Gracias</p>\n    ");
+  }
+
+  if (information.resolve.length) {
+    resultArea === null || resultArea === void 0 ? void 0 : resultArea.innerHTML = '';
+    information.resolve.forEach(function (value) {
+      resultArea === null || resultArea === void 0 ? void 0 : resultArea.insertAdjacentHTML('beforeend', "<li class=\"p-2\">Check Out habitacion: " + value + "</li>     \n        ");
+    });
+    resultArea === null || resultArea === void 0 ? void 0 : resultArea.insertAdjacentHTML('beforeend', "<p class=\"p-2\">Muchas gracias por la visita</p>");
+  }
+};
+
+exports.printCheckOutResult = printCheckOutResult;
+},{"../../../components/show-elements":"app/components/show-elements.ts","../../../components/hide-elements":"app/components/hide-elements.ts"}],"app/pages/checkOut/components/callback-checkOut.ts":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.callbackCheckOut = void 0;
+
+var _getGuestPerRoom = require("./get-guest-per-room");
+
+var _checkOutGuest = require("./checkOut-guest");
+
+var _printCheckOutResult = require("./print-checkOut-result");
+
+var callbackCheckOut = function callbackCheckOut(event) {
+  event.preventDefault();
+  var result = {
+    resolve: [],
+    reject: []
+  };
+  var guest = (0, _getGuestPerRoom.getGuestPerRoom)();
+
+  if (guest === undefined) {
+    result.reject.push('La habitacion no esta alquilada');
+  }
+
+  if ((guest === null || guest === void 0 ? void 0 : guest.invoice) === false) {
+    result.reject.push('La habitacion no esta facturada');
+  }
+
+  if ((guest === null || guest === void 0 ? void 0 : guest.invoice) === true) {
+    result.resolve = (0, _checkOutGuest.checkOutGuest)(guest);
+  }
+
+  (0, _printCheckOutResult.printCheckOutResult)(result);
+};
+
+exports.callbackCheckOut = callbackCheckOut;
+},{"./get-guest-per-room":"app/pages/checkOut/components/get-guest-per-room.ts","./checkOut-guest":"app/pages/checkOut/components/checkOut-guest.ts","./print-checkOut-result":"app/pages/checkOut/components/print-checkOut-result.ts"}],"app/pages/checkOut/checkOut.ts":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.checkOut = void 0;
+
+var _callbackCheckOut = require("./components/callback-checkOut");
+
+var _hideElements = require("../../components/hide-elements");
+
+var checkOut = function checkOut() {
+  (0, _hideElements.hideElements)([document.querySelector('#CheckOutResult')]);
+  var checkOutForm = document.querySelector('#checkOutForm');
+
+  if (checkOutForm) {
+    checkOutForm.removeEventListener('submit', _callbackCheckOut.callbackCheckOut);
+    checkOutForm.addEventListener('submit', _callbackCheckOut.callbackCheckOut);
+  }
+};
+
+exports.checkOut = checkOut;
+},{"./components/callback-checkOut":"app/pages/checkOut/components/callback-checkOut.ts","../../components/hide-elements":"app/components/hide-elements.ts"}],"app/pages/checkOut/index.ts":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _checkOut = require("./checkOut");
+
+Object.keys(_checkOut).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function () {
+      return _checkOut[key];
+    }
+  });
+});
+},{"./checkOut":"app/pages/checkOut/checkOut.ts"}],"app/pages/changeRoom/components/get-guest-per-room.ts":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.getGuestPerRoom = void 0;
+
+var _store = require("../../../store");
+
+var getGuestPerRoom = function getGuestPerRoom(roomsSelected) {
+  var result = _store.store.guests.find(function (guest) {
+    return guest.asignedRoom.some(function (room) {
+      return room === parseInt(roomsSelected);
+    });
+  });
+
+  return result;
+};
+
+exports.getGuestPerRoom = getGuestPerRoom;
+},{"../../../store":"app/store.ts"}],"app/pages/changeRoom/components/print-guest-info.ts":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.printGuestInfo = void 0;
+
+var _showElements = require("../../../components/show-elements");
+
+var printGuestInfo = function printGuestInfo(guest, selectRooms) {
+  var areaGuestInfo = document.querySelector('#changeRoomAreaGuestInfo');
+  (0, _showElements.showElements)([areaGuestInfo]);
+  areaGuestInfo === null || areaGuestInfo === void 0 ? void 0 : areaGuestInfo.innerHTML = '';
+  areaGuestInfo === null || areaGuestInfo === void 0 ? void 0 : areaGuestInfo.insertAdjacentHTML('beforeend', "<h6 class=\"p-2 \">Id Guest: " + guest.idGuest + "</h6>\n    <p class=\"p-1 mb-2\">Asign room: " + guest.asignedRoom + "</p>\n    <p class=\"py-1 \">Change rooms: " + selectRooms + "</p>\n    <button class=\"btn btn-success mt-2 \" id=\"confirmChange\">Confirm</button>");
+};
+
+exports.printGuestInfo = printGuestInfo;
+},{"../../../components/show-elements":"app/components/show-elements.ts"}],"app/pages/changeRoom/components/print-result-change-room.ts":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.printResultChangeRoom = void 0;
+
+var _hideElements = require("../../../components/hide-elements");
+
+var _showElements = require("../../../components/show-elements");
+
+var printResultChangeRoom = function printResultChangeRoom(information) {
+  var changeRoomResult = document.querySelector('#changeRoomAreaResult');
+  (0, _hideElements.hideElements)([changeRoomResult]);
+  (0, _showElements.showElements)([changeRoomResult]);
+  changeRoomResult === null || changeRoomResult === void 0 ? void 0 : changeRoomResult.innerHTML = '';
+
+  if (information.length === 1) {
+    changeRoomResult === null || changeRoomResult === void 0 ? void 0 : changeRoomResult.insertAdjacentHTML('beforeend', "<p>" + information + "\n    </p>");
+  }
+
+  if (information.length >= 2) {
+    for (var i = 0; i < information.length; i = i + 2) {
+      changeRoomResult === null || changeRoomResult === void 0 ? void 0 : changeRoomResult.insertAdjacentHTML('beforeend', "<li class=\"p-2\">Cambiada habitacion: " + information[i] + " por la " + information[i + 1] + "</li>");
+    }
+
+    changeRoomResult === null || changeRoomResult === void 0 ? void 0 : changeRoomResult.insertAdjacentHTML('beforeend', "<p class=\"p-2\">Muchas Gracias</p>");
+  }
+};
+
+exports.printResultChangeRoom = printResultChangeRoom;
+},{"../../../components/hide-elements":"app/components/hide-elements.ts","../../../components/show-elements":"app/components/show-elements.ts"}],"app/pages/changeRoom/components/callback-change-room.ts":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.callbackChangeRoom = void 0;
+
+var _store = require("../../../store");
+
+var _getGuestPerRoom = require("./get-guest-per-room");
+
+var _printGuestInfo = require("./print-guest-info");
+
+var _printResultChangeRoom = require("./print-result-change-room");
+
+var _getAssignedRoom = require("../../../components/get-assigned-room");
+
+var _hideElements = require("../../../components/hide-elements");
+
+var callbackChangeRoom = function callbackChangeRoom(event) {
+  event.preventDefault();
+  var result = {
+    resolve: [],
+    reject: []
+  };
+  var changeRoomSelect = document.querySelectorAll('#changeRoomSelect option:checked');
+  var roomsSelected = Array.from(changeRoomSelect).map(function (el) {
+    return el.value;
+  });
+  var guest = (0, _getGuestPerRoom.getGuestPerRoom)(roomsSelected[0]);
+
+  if (guest === undefined) {
+    result.reject.push('Esa habitacion esta vacia');
+    (0, _hideElements.hideElements)([document.querySelector('#changeRoomAreaGuestInfo')]);
+    (0, _printResultChangeRoom.printResultChangeRoom)(result.reject);
+  }
+
+  if (guest !== undefined) {
+    (0, _printGuestInfo.printGuestInfo)(guest, roomsSelected);
+  }
+
+  var confirmChangeRoom = function confirmChangeRoom() {
+    roomsSelected.forEach(function (value) {
+      _store.store.rooms.find(function (room) {
+        if (parseInt(value) === room.idRoom) {
+          var requestedCapacity = room.maxCapacity;
+
+          var allOcupped = _store.store.rooms.find(function (value) {
+            return value.guest === '';
+          });
+
+          if (allOcupped === undefined) {
+            result.reject.push('No disponemos de otra habitacion libre');
+            (0, _printResultChangeRoom.printResultChangeRoom)(result.reject);
+            return;
+          }
+
+          var findEmptyRoom_1 = (0, _getAssignedRoom.getFirstEmptyRoom)(requestedCapacity);
+
+          _store.store.rooms.filter(function (element) {
+            if (findEmptyRoom_1.idRoom === element.idRoom) {
+              element.guest = guest === null || guest === void 0 ? void 0 : guest.idGuest;
+            }
+          });
+
+          _store.store.rooms.forEach(function (element) {
+            if (parseInt(value) === element.idRoom) {
+              element.guest = '';
+            }
+          });
+
+          var index = guest.asignedRoom.findIndex(function (element) {
+            return element === parseInt(value);
+          });
+          var oldRoom = guest.asignedRoom.splice(index, 1, findEmptyRoom_1.idRoom);
+          result.resolve.push(parseInt(value));
+          result.resolve.push(findEmptyRoom_1.idRoom);
+        }
+      });
+    });
+    (0, _printResultChangeRoom.printResultChangeRoom)(result.resolve);
+  };
+
+  var confirmChangeButton = document.querySelector('#confirmChange');
+
+  if (confirmChangeButton) {
+    confirmChangeButton.removeEventListener('click', confirmChangeRoom);
+    confirmChangeButton.addEventListener('click', confirmChangeRoom);
+  }
+};
+
+exports.callbackChangeRoom = callbackChangeRoom;
+},{"../../../store":"app/store.ts","./get-guest-per-room":"app/pages/changeRoom/components/get-guest-per-room.ts","./print-guest-info":"app/pages/changeRoom/components/print-guest-info.ts","./print-result-change-room":"app/pages/changeRoom/components/print-result-change-room.ts","../../../components/get-assigned-room":"app/components/get-assigned-room.ts","../../../components/hide-elements":"app/components/hide-elements.ts"}],"app/pages/changeRoom/change-room.ts":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.changeRoom = void 0;
+
+var _callbackChangeRoom = require("./components/callback-change-room");
+
+var _hideElements = require("../../components/hide-elements");
+
+var changeRoom = function changeRoom() {
+  (0, _hideElements.hideElements)([document.querySelector('#changeRoomAreaGuestInfo'), document.querySelector('#changeRoomAreaResult')]);
+  var changeRoomForm = document.querySelector('#changeRoomForm');
+
+  if (changeRoomForm) {
+    changeRoomForm.removeEventListener('submit', _callbackChangeRoom.callbackChangeRoom);
+    changeRoomForm.addEventListener('submit', _callbackChangeRoom.callbackChangeRoom);
+  }
+};
+
+exports.changeRoom = changeRoom;
+},{"./components/callback-change-room":"app/pages/changeRoom/components/callback-change-room.ts","../../components/hide-elements":"app/components/hide-elements.ts"}],"app/pages/changeRoom/index.ts":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _changeRoom = require("./change-room");
+
+Object.keys(_changeRoom).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function () {
+      return _changeRoom[key];
+    }
+  });
+});
+},{"./change-room":"app/pages/changeRoom/change-room.ts"}],"app/index.ts":[function(require,module,exports) {
 "use strict";
 
 var _rooms = require("./pages/rooms");
@@ -1428,7 +1887,15 @@ var _guest = require("./pages/guest");
 
 var _invoice = require("./pages/invoice");
 
-var _weather = require("./pages/weather/weather");
+var _weather = require("./pages/weather");
+
+var _checkOut = require("./pages/checkOut");
+
+var _hideElements = require("./components/hide-elements");
+
+var _showElements = require("./components/show-elements");
+
+var _changeRoom = require("./pages/changeRoom");
 
 var areaButtonsButton = document.querySelector('#areaButtons');
 var goBackButton = document.querySelector('#goBack');
@@ -1437,9 +1904,8 @@ areaButtonsButton === null || areaButtonsButton === void 0 ? void 0 : areaButton
   area = document.querySelector("#" + event.target.id + "Area");
 
   if (area && goBackButton) {
-    areaButtonsButton.classList.add('d-none');
-    area.classList.remove('d-none');
-    goBackButton.classList.remove('d-none');
+    (0, _hideElements.hideElements)([areaButtonsButton]);
+    (0, _showElements.showElements)([area, goBackButton]);
 
     switch (area.id) {
       case 'listRoomsArea':
@@ -1461,18 +1927,25 @@ areaButtonsButton === null || areaButtonsButton === void 0 ? void 0 : areaButton
       case 'weatherArea':
         (0, _weather.weather)();
         break;
+
+      case 'checkOutArea':
+        (0, _checkOut.checkOut)();
+        break;
+
+      case 'changeRoomArea':
+        (0, _changeRoom.changeRoom)();
+        break;
     }
   }
 });
 
 if (goBackButton && areaButtonsButton) {
   goBackButton.addEventListener('click', function () {
-    areaButtonsButton.classList.remove('d-none');
-    area.classList.add('d-none');
-    goBackButton.classList.add('d-none');
+    (0, _showElements.showElements)([areaButtonsButton]);
+    (0, _hideElements.hideElements)([area, goBackButton]);
   });
 }
-},{"./pages/rooms":"app/pages/rooms/index.ts","./pages/checkIn":"app/pages/checkIn/index.ts","./pages/guest":"app/pages/guest/index.ts","./pages/invoice":"app/pages/invoice/index.ts","./pages/weather/weather":"app/pages/weather/weather.ts"}],"C:/Users/Usuario/AppData/Roaming/npm/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+},{"./pages/rooms":"app/pages/rooms/index.ts","./pages/checkIn":"app/pages/checkIn/index.ts","./pages/guest":"app/pages/guest/index.ts","./pages/invoice":"app/pages/invoice/index.ts","./pages/weather":"app/pages/weather/index.ts","./pages/checkOut":"app/pages/checkOut/index.ts","./components/hide-elements":"app/components/hide-elements.ts","./components/show-elements":"app/components/show-elements.ts","./pages/changeRoom":"app/pages/changeRoom/index.ts"}],"C:/Users/Usuario/AppData/Roaming/npm/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -1500,7 +1973,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "49263" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "49396" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

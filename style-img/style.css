@@ -13,3 +13,7 @@
   width: 105px;
   height: 63px;
 }
+
+#changeRoomExample {
+  height: 250px !important;
+}

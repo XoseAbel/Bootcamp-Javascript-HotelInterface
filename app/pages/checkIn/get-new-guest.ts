@@ -16,7 +16,7 @@ const getNewGuest = (newMembers: person[]) => {
     return result;
   }
   // Generar id Ramdom
-  const newIdGuest = `${Math.floor(Math.random() * 99999999)}`;
+  const newIdGuest = `${Math.floor(Math.random() * 99999)}`;
   // le facilitamos los newMembers para que nos devuelva las habitaciones
   const newAssignedRooms: Result = getNewAssignedRooms(newMembers, newIdGuest);
   if (newAssignedRooms.reject.length) {

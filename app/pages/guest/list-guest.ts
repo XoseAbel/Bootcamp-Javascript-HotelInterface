@@ -32,10 +32,11 @@ const listGuests = () => {
       );
     });
   }
+
   listGuestsTable?.addEventListener('click', event => {
     if (event.target.classList.value.includes('listMembers')) {
-      const membersId = event.target.id;
-      const areaMemberList =
+      let membersId = event.target.id;
+      let areaMemberList =
         event.target.parentElement.parentElement.nextElementSibling;
       areaMemberList.classList.toggle('d-none');
       showMembersDetails(areaMemberList, membersId);
