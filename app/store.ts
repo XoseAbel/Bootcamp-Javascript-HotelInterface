@@ -102,6 +102,11 @@ let store: store = {
       name: 'Robert',
       age: 30,
     },
+    {
+      idCard: '33333333',
+      name: 'Carlos',
+      age: 40,
+    },
   ],
 };
 export { store };

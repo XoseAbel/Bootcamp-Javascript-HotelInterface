@@ -33,11 +33,15 @@ export const getNewAssignedRooms = (newMembers: person[], guestId: string) => {
   );
   //buscar habitaciones requeridas con el bucle
   capacityPerRoom.forEach(value => {
-    const asssignedRoon = getRoomSelected(value);
-    result.resolve.push(asssignedRoon.idRoom);
+    const assignedRoom = getRoomSelected(value);
+    if (assignedRoom === undefined) {
+      result.reject.push('No quedan habicationes');
+      return;
+    }
+    result.resolve.push(assignedRoom.idRoom);
     //asignar huesped a la habitacion, para no buscar 2 iguales
     store.rooms.forEach(room => {
-      if (room.idRoom === asssignedRoon.idRoom) room.guest = guestId;
+      if (room.idRoom === assignedRoom.idRoom) room.guest = guestId;
     });
   });
   return result;

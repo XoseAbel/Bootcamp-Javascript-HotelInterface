@@ -271,6 +271,10 @@ var store = {
     idCard: '99999999',
     name: 'Robert',
     age: 30
+  }, {
+    idCard: '33333333',
+    name: 'Carlos',
+    age: 40
   }]
 };
 exports.store = store;
@@ -622,11 +626,17 @@ var getNewAssignedRooms = function getNewAssignedRooms(newMembers, guestId) {
 
   var capacityPerRoom = (0, _getCapacityPerRoom.getCapacityPerRoom)(quantityRoomsRequested, capaRequested);
   capacityPerRoom.forEach(function (value) {
-    var asssignedRoon = (0, _bucleFindEmptyRoom.getRoomSelected)(value);
-    result.resolve.push(asssignedRoon.idRoom);
+    var assignedRoom = (0, _bucleFindEmptyRoom.getRoomSelected)(value);
+
+    if (assignedRoom === undefined) {
+      result.reject.push('No quedan habicationes');
+      return;
+    }
+
+    result.resolve.push(assignedRoom.idRoom);
 
     _store.store.rooms.forEach(function (room) {
-      if (room.idRoom === asssignedRoon.idRoom) room.guest = guestId;
+      if (room.idRoom === assignedRoom.idRoom) room.guest = guestId;
     });
   });
   return result;
@@ -698,6 +708,7 @@ var registerGuestInStore = function registerGuestInStore() {
   var resultAreaReject = document.querySelector('.resultCheckInAreaReject');
   form === null || form === void 0 ? void 0 : form.addEventListener('submit', function submitCheckIn(event) {
     event.preventDefault();
+    var counter = result.resolve.length;
     resultAreaResolve === null || resultAreaResolve === void 0 ? void 0 : resultAreaResolve.innerHTML = '';
     resultAreaReject === null || resultAreaReject === void 0 ? void 0 : resultAreaReject.innerHTML = '';
     var newMembers = (0, _getNewMember.getNewMember)();
@@ -720,9 +731,9 @@ var registerGuestInStore = function registerGuestInStore() {
       _store.store.guests.push(newGuest.resolve[0]);
     }
 
-    console.log(result.resolve[0]);
+    console.log(result.resolve[counter]);
     resultArea === null || resultArea === void 0 ? void 0 : resultArea.classList.remove('d-none');
-    result.reject.length ? (resultAreaReject.classList.remove('d-none'), resultAreaReject.innerHTML = "<p class=\"bg-white rounded px-2 py-1 mt-2\">" + result.reject + "\n        </p>") : (resultAreaResolve.classList.remove('d-none'), resultAreaResolve.innerHTML = "<p class=\"bg-white rounded px-2 py-1 mt-2\">Habitacion asignada: " + result.resolve[0].asignedRoom + "<br>\n        IdGuest: " + result.resolve[0].idGuest + "<br>\n        CheckIn Date: " + result.resolve[0].checkInDate + "<br>\n        CheckOut Date: " + result.resolve[0].checkOutDate + "\n        </p>");
+    result.reject.length ? (resultAreaReject.classList.remove('d-none'), resultAreaReject.innerHTML = "", resultAreaReject.innerHTML = "<p class=\"bg-white rounded px-2 py-1 mt-2\">" + result.reject + "\n      </p>") : (resultAreaResolve.classList.remove('d-none'), resultAreaReject.innerHTML = "", resultAreaResolve.innerHTML = "<p class=\"bg-white rounded px-2 py-1 mt-2\">Habitacion asignada: " + result.resolve[counter].asignedRoom + "<br>\n      IdGuest: " + result.resolve[counter].idGuest + "<br>\n      CheckIn Date: " + result.resolve[counter].checkInDate + "<br>\n      CheckOut Date: " + result.resolve[counter].checkOutDate + "\n      </p>");
   });
   return result;
 };
@@ -1769,6 +1780,11 @@ var callbackChangeRoom = function callbackChangeRoom(event) {
     reject: []
   };
   var changeRoomSelect = document.querySelectorAll('#changeRoomSelect option:checked');
+
+  if (document.querySelector('#changeRoomAreaResult')) {
+    (0, _hideElements.hideElements)([document.querySelector('#changeRoomAreaResult')]);
+  }
+
   var roomsSelected = Array.from(changeRoomSelect).map(function (el) {
     return el.value;
   });

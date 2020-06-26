@@ -17,6 +17,9 @@ export const callbackChangeRoom = event => {
   const changeRoomSelect = document.querySelectorAll(
     '#changeRoomSelect option:checked'
   );
+  if (document.querySelector('#changeRoomAreaResult')) {
+    hideElements([document.querySelector('#changeRoomAreaResult')]);
+  }
   const roomsSelected = Array.from(changeRoomSelect).map(el => el.value);
   // buscar huesped por habitacion
   const guest = getGuestPerRoom(roomsSelected[0]);

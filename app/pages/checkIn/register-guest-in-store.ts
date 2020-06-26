@@ -15,6 +15,7 @@ export const registerGuestInStore = () => {
 
   form?.addEventListener('submit', function submitCheckIn(event) {
     event.preventDefault();
+    let counter = result.resolve.length;
     resultAreaResolve?.innerHTML = '';
     resultAreaReject?.innerHTML = '';
     const newMembers = getNewMember();
@@ -31,18 +32,20 @@ export const registerGuestInStore = () => {
     if (newGuest.reject.length === 0) {
       store.guests.push(newGuest.resolve[0]);
     }
-    console.log(result.resolve[0]);
+    console.log(result.resolve[counter]);
     resultArea?.classList.remove('d-none');
     result.reject.length
       ? (resultAreaReject.classList.remove('d-none'),
+        (resultAreaReject.innerHTML = ``),
         (resultAreaReject.innerHTML = `<p class="bg-white rounded px-2 py-1 mt-2">${result.reject}
-        </p>`))
+      </p>`))
       : (resultAreaResolve.classList.remove('d-none'),
-        (resultAreaResolve.innerHTML = `<p class="bg-white rounded px-2 py-1 mt-2">Habitacion asignada: ${result.resolve[0].asignedRoom}<br>
-        IdGuest: ${result.resolve[0].idGuest}<br>
-        CheckIn Date: ${result.resolve[0].checkInDate}<br>
-        CheckOut Date: ${result.resolve[0].checkOutDate}
-        </p>`));
+        (resultAreaReject.innerHTML = ``),
+        (resultAreaResolve.innerHTML = `<p class="bg-white rounded px-2 py-1 mt-2">Habitacion asignada: ${result.resolve[counter].asignedRoom}<br>
+      IdGuest: ${result.resolve[counter].idGuest}<br>
+      CheckIn Date: ${result.resolve[counter].checkInDate}<br>
+      CheckOut Date: ${result.resolve[counter].checkOutDate}
+      </p>`));
     // console.log(submitCheckIn);
   });
   return result;
