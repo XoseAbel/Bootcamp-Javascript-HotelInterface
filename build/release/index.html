@@ -88,6 +88,13 @@
           >
             Weather
           </button>
+          <button
+            type="button"
+            class="btn btn-lg btn-success tx-white"
+            id="newYork"
+          >
+            New York Times
+          </button>
         </div>
       </div>
       <div class="row d-flex justify-content-center">
@@ -267,6 +274,23 @@
           id="invoiceResult"
         ></div>
       </div>
+      <div class="row flex-row py-3 d-none" id="newYorkArea">
+        <form class="col-3 px-2" id="newYorkForm">
+          <h5 class="bg-white rounded p-1" for="newYorkTimes">
+            New York Times
+          </h5>
+          <select class="form-control" id="selectNews">
+            <option selected disabled value="0">Select area...</option>
+            <option value="briefing">Briefing</option>
+            <option value="world">World</option>
+            <option value="sports">Sport</option>
+          </select>
+        </form>
+        <div
+          class="col-9 d-none pt-4 px-4 rounded bg-white"
+          id="newYorkTimesResult"
+        ></div>
+      </div>
       <div class="row flex-row py-3 d-none" id="weatherArea">
         <form class="col-md-4" id="cityToFindForm">
           <div class="form-group">
@@ -300,6 +324,6 @@
         </div>
       </div>
     </div>
-    <script src="./app.0fcf0133.js"></script>
+    <script src="./app.fb10dc2f.js"></script>
   </body>
 </html>

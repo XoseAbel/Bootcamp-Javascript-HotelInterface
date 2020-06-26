@@ -3,6 +3,7 @@ import { checkInFunction } from './pages/checkIn';
 import { listGuests } from './pages/guest';
 import { invoiceFunction } from './pages/invoice';
 import { weather } from './pages/weather';
+import { news } from './pages/newYorkTimes';
 import { checkOut } from './pages/checkOut';
 import { hideElements } from './components/hide-elements';
 import { showElements } from './components/show-elements';
@@ -40,6 +41,9 @@ areaButtonsButton?.addEventListener('click', (event: any) => {
         break;
       case 'changeRoomArea':
         changeRoom();
+        break;
+      case 'newYorkArea':
+        news();
         break;
     }
   }
