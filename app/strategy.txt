@@ -1,0 +1,47 @@
+import { Episode } from "./Episode";
+import { EpisodeDetail } from "./EpisodeDetail";
+import { elements } from "../utils/elements";
+import { clearResults } from "../utils/clearResults";
+import { state, setState } from "../store";
+
+const strategies = {
+  getNewEpisodes,
+  getInProgress,
+  getSuggestions,
+};
+function setStrategy(strategy) {
+  return strategies[strategy]();
+}
+function getNewEpisodes() {
+  const { newEpisodes } = state;
+  return newEpisodes;
+}
+function getInProgress() {
+  const { inProgress } = state;
+  return inProgress;
+}
+function getSuggestions() {
+  const { suggestions } = state;
+  return suggestions;
+}
+
+export const EpisodeList = (buttonId = false) => {
+  if (buttonId) {
+    setState("episodeStrategy", buttonId);
+  }
+  let episodes = setStrategy(state.episodeStrategy);
+  let markup = ``;
+  episodes.map(episode => {
+    markup += Episode(episode);
+  });
+  markup += ``.trim();
+  //return markup;
+  return {
+    clear: function() {
+      clearResults(elements.EpisodeList);
+    },
+    render: function() {
+      elements.EpisodeList.insertAdjacentHTML(`beforeend`, markup);
+    }
+  };
+};

@@ -1,0 +1,19 @@
+import {Guest} from './pages/Guest/index.js';
+
+pages
+   -- Guest
+       -- index.js
+       -- Guest.js
+       -- getGuests.js
+
+import {getGuests} from './getGuests';
+function printDom () {
+}
+function checkData() {
+}
+export { Guest};
+
+
+form.addEventListener('click', () => {
+    Guest
+})

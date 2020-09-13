@@ -1,0 +1,19 @@
+.container {
+  background-image: url('./background.jpg');
+  background-position: top;
+  background-repeat: no-repeat;
+  background-size: cover;
+  max-width: 700px;
+}
+.dropdown-item {
+  font-size: 13px;
+}
+
+.weatherImg {
+  width: 105px;
+  height: 63px;
+}
+
+#changeRoomExample {
+  height: 250px !important;
+}
